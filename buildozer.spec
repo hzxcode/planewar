@@ -9,7 +9,7 @@ source.exclude_dirs = build,dist,.venv,.vscode,__pycache__,fonts,images,.git,.gi
 
 version = 1.0.0
 
-requirements = python3,pygame
+requirements = python3==3.10.12,hostpython3==3.10.12,pygame
 
 orientation = portrait
 fullscreen = 1
@@ -25,7 +25,7 @@ android.archs = arm64-v8a
 android.accept_sdk_license = True
 android.skip_update = False
 
-p4a.branch = master
+p4a.branch = develop
 
 [buildozer]
 log_level = 2
