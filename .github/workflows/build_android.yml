@@ -8,48 +8,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    timeout-minutes: 90
+    timeout-minutes: 120
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install system dependencies
+      - name: Build APK with Docker
         run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq \
-            build-essential git zip unzip \
-            openjdk-17-jdk \
-            autoconf automake libtool \
-            libffi-dev libssl-dev \
-            zlib1g-dev libncurses5-dev libncursesw5-dev \
-            cmake pkg-config \
-            lld
-
-      - name: Install buildozer and cython
-        run: |
-          pip install --upgrade pip setuptools wheel
-          pip install buildozer cython virtualenv
-
-      - name: Accept Android SDK licenses
-        run: |
-          mkdir -p ~/.android
-          echo "y" > ~/.android/repositories.cfg
-          yes | buildozer android debug 2>&1 | tee build.log || true
-          if [ -d "$HOME/.buildozer/android/platform/android-sdk/licenses" ]; then
-            echo "Licenses already accepted"
-          fi
-          if [ -d "$HOME/.buildozer/android/platform/android-sdk" ]; then
-            yes | "$HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager" --licenses 2>/dev/null || true
-          fi
-
-      - name: Build APK (retry)
-        run: |
-          buildozer android debug 2>&1 | tee build.log
+          docker run --rm \
+            -v "$(pwd)":/home/user/hostcwd \
+            kivy/buildozer:latest \
+            bash -c "cd /home/user/hostcwd && yes | buildozer android debug 2>&1 | tee build.log"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -64,3 +33,4 @@ jobs:
         with:
           name: build-log
           path: build.log
+          retention-days: 7
