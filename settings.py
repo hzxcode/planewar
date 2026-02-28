@@ -1,0 +1,72 @@
+"""
+游戏配置常量
+"""
+
+import os
+import sys
+
+if getattr(sys, "frozen", False):
+    _BASE_DIR = os.path.dirname(sys.executable)
+    _RESOURCE_DIR = getattr(sys, "_MEIPASS", _BASE_DIR)
+else:
+    _BASE_DIR = _RESOURCE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+SCREEN_WIDTH = 480
+SCREEN_HEIGHT = 700
+WINDOW_TITLE = "飞机大战"
+
+FPS = 60
+FIRE_COOLDOWN = 6
+INITIAL_SPAWN_INTERVAL = 50
+MIN_SPAWN_INTERVAL = 20
+DIFFICULTY_SCORE_STEP = 20
+
+PLAYER_LIVES = 6
+PLAYER_MAX_HP = 6
+INVINCIBILITY_FRAMES = 90
+
+DOUBLE_SHOT_UNLOCK = 10
+
+ENEMY_FIRE_INTERVAL = 90
+ENEMY_BULLET_SPEED = 5
+
+POWERUP_DROP_CHANCE = 0.35
+POWERUP_SPEED = 2
+POWERUP_TYPES = ("bullet", "life", "morph", "shield")
+
+SHIELD_DURATION = 360
+
+ENEMY_SMALL = (32, 32, 6, 2)
+ENEMY_MEDIUM = (40, 40, 4, 1)
+ENEMY_LARGE = (52, 52, 2, 3)
+
+SCORE_FONT_SIZE = 28
+SCORE_POS = (10, 10)
+HIGH_SCORE_FILE = os.path.join(_BASE_DIR, "highscore.txt")
+LEADERBOARD_FILE = os.path.join(_BASE_DIR, "leaderboard.txt")
+LEADERBOARD_SIZE = 10
+
+IMAGES_DIR = os.path.join(_RESOURCE_DIR, "images")
+
+MISSILE_COOLDOWN = 180
+MISSILE_SPEED = 14
+MISSILE_RADIUS = 110
+MISSILE_BOSS_DAMAGE = 10
+
+BOSS_SCORE_THRESHOLD = 80
+BOSS_HP_BASE = 25
+BOSS_FIRE_INTERVAL = 50
+BOSS_BULLET_SPEED = 4
+
+COMBO_WINDOW = 120
+COMBO_MAX = 10
+
+LEVEL_TINTS = [
+    (0, 0, 30),
+    (25, 0, 35),
+    (0, 25, 20),
+    (30, 5, 0),
+    (25, 15, 0),
+    (0, 15, 35),
+    (30, 0, 15),
+]
