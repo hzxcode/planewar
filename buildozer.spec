@@ -4,8 +4,8 @@ package.name = planewar
 package.domain = org.planewar
 
 source.dir = .
-source.include_exts = py,txt
-source.exclude_dirs = build,dist,.venv,.vscode,__pycache__,fonts,images,.git,.github
+source.include_exts = py,txt,ttf,otf
+source.exclude_dirs = build,dist,.venv,.vscode,__pycache__,images,.git,.github,apk-output,build-log-output
 
 version = 1.0.0
 
