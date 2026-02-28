@@ -20,7 +20,19 @@ jobs:
             -v "$(pwd)":/home/user/hostcwd \
             -w /home/user/hostcwd \
             kivy/buildozer:latest \
-            bash -c "yes | buildozer android debug 2>&1 | tee build.log"
+            bash -c '
+              # First pass: let buildozer download all deps
+              yes | buildozer android debug 2>&1 || true
+
+              # Remove Python 3.14 specific patches that break 3.10
+              find .buildozer -name "3.14_armv7l_fix.patch" -delete 2>/dev/null || true
+
+              # Clean python3 recipe build to force re-prebuild without bad patches
+              rm -rf .buildozer/android/platform/build-arm64-v8a/build/other_builds/python3 2>/dev/null || true
+
+              # Retry the build
+              yes | buildozer android debug 2>&1 | tee build.log
+            '
 
       - name: Upload APK
         if: always()
