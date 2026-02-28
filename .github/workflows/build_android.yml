@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
-    timeout-minutes: 60
+    timeout-minutes: 90
 
     steps:
       - uses: actions/checkout@v4
@@ -27,15 +27,29 @@ jobs:
             autoconf automake libtool \
             libffi-dev libssl-dev \
             zlib1g-dev libncurses5-dev libncursesw5-dev \
-            cmake pkg-config
+            cmake pkg-config \
+            lld
 
-      - name: Install buildozer
+      - name: Install buildozer and cython
         run: |
+          pip install --upgrade pip setuptools wheel
           pip install buildozer cython virtualenv
 
-      - name: Build APK
+      - name: Accept Android SDK licenses
         run: |
-          buildozer android debug 2>&1 | tee build.log | tail -100
+          mkdir -p ~/.android
+          echo "y" > ~/.android/repositories.cfg
+          yes | buildozer android debug 2>&1 | tee build.log || true
+          if [ -d "$HOME/.buildozer/android/platform/android-sdk/licenses" ]; then
+            echo "Licenses already accepted"
+          fi
+          if [ -d "$HOME/.buildozer/android/platform/android-sdk" ]; then
+            yes | "$HOME/.buildozer/android/platform/android-sdk/cmdline-tools/latest/bin/sdkmanager" --licenses 2>/dev/null || true
+          fi
+
+      - name: Build APK (retry)
+        run: |
+          buildozer android debug 2>&1 | tee build.log
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
